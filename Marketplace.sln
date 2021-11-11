@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Tests", "Marketplace.Tests\Marketplace.Tests.csproj", "{B3781E00-875E-46D1-B0FF-8DCAE818414F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace", "Marketplace\Marketplace.csproj", "{CA2AEC4B-ACF1-4991-9344-60CAE3608AEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Domain", "Marketplace.Domain\Marketplace.Domain.csproj", "{321861F4-84F1-419C-A489-A25E4DDC761A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3781E00-875E-46D1-B0FF-8DCAE818414F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3781E00-875E-46D1-B0FF-8DCAE818414F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3781E00-875E-46D1-B0FF-8DCAE818414F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3781E00-875E-46D1-B0FF-8DCAE818414F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA2AEC4B-ACF1-4991-9344-60CAE3608AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA2AEC4B-ACF1-4991-9344-60CAE3608AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA2AEC4B-ACF1-4991-9344-60CAE3608AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA2AEC4B-ACF1-4991-9344-60CAE3608AEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{321861F4-84F1-419C-A489-A25E4DDC761A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{321861F4-84F1-419C-A489-A25E4DDC761A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{321861F4-84F1-419C-A489-A25E4DDC761A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{321861F4-84F1-419C-A489-A25E4DDC761A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
