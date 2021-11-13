@@ -1,25 +1,120 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
+using Marketplace.Framework;
 
 namespace Marketplace.Domain
 {
-    public class ClassifiedAd
+    public class ClassifiedAd:Entity
     {
-        public ClassifiedAdId Id { get; }
+        public ClassifiedAdId Id { get; private set; }
 
+        // public ClassifiedAd(ClassifiedAdId id, UserId ownerId)
+        // {
+        //     Id = id;
+        //     OwnerId = ownerId;
+        //     State = ClassifiedAdState.Inactive;
+        //     EnsureValidState();
+        //     Raise(new Events.ClassifiedAdCreated
+        //     {
+        //         Id=id,
+        //         OwnerId = ownerId
+        //     });
+        // }
+        //
         public ClassifiedAd(ClassifiedAdId id, UserId ownerId)
+            => Apply(new Events.ClassifiedAdCreated
+            {
+                Id = id,
+                OwnerId = ownerId
+            });
+
+        public void SetTitle(ClassifiedAdTitle title)
+            => Apply(new Events.ClassifiedAdTitleChanged
+            {
+                Id = Id,
+                Title = title
+            });
+
+        public void UpdateText(ClassifiedAdText text)
+            => Apply(new Events.ClassifiedAdTextUpdated
+            {
+                Id = Id,
+                AdText = text
+            });
+
+        public void UpdatePrice(Price price)
+            => Apply(new Events.ClassifiedAdPriceUpdated
+            {
+                Id = Id,
+                Price = Price.Amount,
+                CurrencyCode = Price.Currency.CurrencyCode
+            });
+
+        public void RequestToPublish()
+            => Apply(new Events.ClassifiedAdSendForReview
+            {
+                Id = Id
+            });
+
+        protected override void When(object @event)
         {
-            Id = id;
-            _ownerId = ownerId;
+            switch(@event)
+            {
+                case Events.ClassifiedAdCreated e:
+                    Id = new ClassifiedAdId(e.Id);
+                    OwnerId = new UserId(e.OwnerId);
+                    State = ClassifiedAdState.Inactive;
+                    break;
+                case Events.ClassifiedAdTitleChanged e:
+                    Title = new ClassifiedAdTitle(e.Title);
+                    break;
+                case Events.ClassifiedAdTextUpdated e:
+                    Text = new ClassifiedAdText(e.AdText);
+                    break;
+                case Events.ClassifiedAdPriceUpdated e:
+                    Price = new Price(e.Price, e.CurrencyCode);
+                    break;
+                case Events.ClassifiedAdSendForReview e:
+                    State = ClassifiedAdState.PendingReview;
+                    break;
+            }
+        }
+        protected override void EnsureValidState()
+        {
+            var valid =
+                Id != null &&
+                OwnerId != null &&
+                (State switch  // C# 8.0
+                {
+                    ClassifiedAdState.PendingReview =>
+                        Title != null
+                        && Text != null
+                        && Price?.Amount > 0,
+                    ClassifiedAdState.Active =>
+                        Title != null
+                        && Text != null
+                        && Price?.Amount > 0
+                        && ApprovedBy != null,
+                    _ => true
+                });
+            if (!valid)
+                throw new InvalidEntityStateException(this, $"Post-checks failed in state {State}");
         }
 
-        public void SetTitle(string title) => _title = title;
-        public void UpdateTest(string text) => _text = text;
-        public void UpdatePrice(decimal price) => _price = price;
+        public UserId OwnerId { get; private set; }
+        public ClassifiedAdTitle Title { get; private set; }
+        public ClassifiedAdText Text { get; private set; }
+        public Price Price{ get; private set; }
+        public ClassifiedAdState State { get; private set; }
+        public UserId ApprovedBy { get; private set; }
 
-        private UserId _ownerId;
-        private string _title;
-        private string _text;
-        private decimal _price;
+        public enum ClassifiedAdState
+        {
+            PendingReview,
+            Active,
+            Inactive,
+            MarkedAsSold
+        }
     }
 }
