@@ -8,20 +8,6 @@ namespace Marketplace.Domain
     public class ClassifiedAd:Entity
     {
         public ClassifiedAdId Id { get; private set; }
-
-        // public ClassifiedAd(ClassifiedAdId id, UserId ownerId)
-        // {
-        //     Id = id;
-        //     OwnerId = ownerId;
-        //     State = ClassifiedAdState.Inactive;
-        //     EnsureValidState();
-        //     Raise(new Events.ClassifiedAdCreated
-        //     {
-        //         Id=id,
-        //         OwnerId = ownerId
-        //     });
-        // }
-        //
         public ClassifiedAd(ClassifiedAdId id, UserId ownerId)
             => Apply(new Events.ClassifiedAdCreated
             {
@@ -47,8 +33,8 @@ namespace Marketplace.Domain
             => Apply(new Events.ClassifiedAdPriceUpdated
             {
                 Id = Id,
-                Price = Price.Amount,
-                CurrencyCode = Price.Currency.CurrencyCode
+                Price = price.Amount,
+                CurrencyCode = price.Currency.CurrencyCode
             });
 
         public void RequestToPublish()
@@ -62,7 +48,7 @@ namespace Marketplace.Domain
             switch(@event)
             {
                 case Events.ClassifiedAdCreated e:
-                    Id = new ClassifiedAdId(e.Id);
+                    Id = new ClassifiedAdId(e.Id);  
                     OwnerId = new UserId(e.OwnerId);
                     State = ClassifiedAdState.Inactive;
                     break;
