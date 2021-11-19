@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Marketplace.API;
+using Marketplace.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +29,11 @@ namespace Marketplace
         private IHostEnvironment Environment { get; }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            // services.AddSingleton(new ClassifiedAdApplicationService());
+            services.AddSingleton<IEntityStore, RavenDbEntityStore>();
+            services.AddScoped<IHandleCommand<ClassifiedAds.V1.Create>>(c =>
+                new RetryingCommandHandler<ClassifiedAds.V1.Create>(
+                    new CreateClassifiedAdHandler(c.GetService<RavenDbEntityStore>())));
             services.AddMvc();
             services.AddSwaggerGen(c =>
             {
