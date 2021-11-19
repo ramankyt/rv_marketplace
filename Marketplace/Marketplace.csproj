@@ -8,4 +8,13 @@
       <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Contracts\CreateClassifiedAdHandler.cs" />
+      <Compile Remove="Contracts\RetryingCommandHandler.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Marketplace.Domain\Marketplace.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

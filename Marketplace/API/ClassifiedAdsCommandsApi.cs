@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Marketplace.Contracts;
 using Microsoft.AspNetCore.Mvc;
@@ -9,20 +10,48 @@ namespace Marketplace.API
     [Route("/ad")]
     public class ClassifiedAdsCommandsApi:Controller
     {
-        private readonly Func<IHandleCommand<V1.Create>> _createAdCommandHandlerFactory;
-        //private readonly IHandleCommand<V1.Create> _createAdCommandHandler;
+        private readonly ClassifiedAdApplicationService _applicationService;
 
-        // private readonly ClassifiedAdApplicationService _applicationService;
-
-        public ClassifiedAdsCommandsApi(Func<IHandleCommand<V1.Create>> createAdCommandHandlerFactory) 
-            => _createAdCommandHandlerFactory = createAdCommandHandlerFactory;
-
-        // public ClassifiedAdsCommandsApi(IHandleCommand<V1.Create> createAdCommandHandler) =>
-        //     _createAdCommandHandler = createAdCommandHandler;
-
+        public ClassifiedAdsCommandsApi(ClassifiedAdApplicationService applicationService) 
+            => _applicationService = applicationService;
 
         [HttpPost]
-        public Task Post(V1.Create request) 
-            => _createAdCommandHandlerFactory().Handle(request);
+        public async Task<IActionResult> Post(V1.Create request)
+        {
+            await _applicationService.Handle(request);
+            return Ok();
+        }
+
+        [Route("name")]
+        [HttpPut]
+        public async Task<IActionResult> Put(V1.SetTitle request)
+        {
+            await _applicationService.Handle(request);
+            return Ok();
+        }
+
+        [Route("text")]
+        [HttpPut]
+        public async Task<IActionResult> Put(V1.UpdateText request)
+        {
+            await _applicationService.Handle(request);
+            return Ok();
+        }
+
+        [Route("price")]
+        [HttpPut]
+        public async Task<IActionResult> Put(V1.UpdatePrice request)
+        {
+            await _applicationService.Handle(request);
+                return Ok();
+        }
+
+        [Route("publish")]
+        [HttpPut]
+        public async Task<IActionResult> Put(V1.RequestToPublish request)
+        {
+            await _applicationService.Handle(request);
+            return Ok();
+        }
     }
 }
